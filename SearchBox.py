@@ -9,6 +9,30 @@ import wx
 import networkx as nx
 import numpy
 import matplotlib.pyplot as plt
+import random
+
+
+def getDisciplines():
+    url='http://enacademic.com/dic.nsf/enwiki/152269'
+    website = requests.get(url)
+    source=website.text
+    parser = BeautifulSoup(source,'html.parser')
+    l=[]
+    for header in parser.find_all("h3"):
+        next=header.next_sibling.next_sibling.next_sibling.next_sibling
+        if next!=None:
+            if next.name=='table':
+                for item in next.find_all("li"):
+                    string=item.string
+                    if string!=None:
+                        l.append(string)
+    return l
+
+lst=getDisciplines()
+with open('disciplines.txt', 'w') as outfile:
+    json.dump(lst, outfile)
+
+getDisciplines()
 
 class MainWindow(wx.Panel):
     def __init__(self, parent):
@@ -25,6 +49,9 @@ class MainWindow(wx.Panel):
         
         self.button =wx.Button(self, label="Run Search", pos=(150, 200))
         self.Bind(wx.EVT_BUTTON, self.OnClick,self.button)
+        
+        self.button =wx.Button(self, label="Random Search", pos=(150, 250))
+        self.Bind(wx.EVT_BUTTON, self.RandomClick,self.button)
 
         
 
@@ -42,6 +69,14 @@ class MainWindow(wx.Panel):
             self.searchBox(self.answer)
         else:
             self.showAuthor(self.answer)
+            
+    def RandomClick(self,event):
+        with open ('disciplines.txt', 'r') as json_file:
+            itemlist = json.load(json_file)
+        answer = random.choice(itemlist)
+        self.searchBox(answer)
+
+            
     def EvtText(self, event):
         self.answer = event.GetString()
         
@@ -52,7 +87,7 @@ class MainWindow(wx.Panel):
         if check == None:
             app = wx.App(False)
             frame = wx.Frame(None)
-            panel = Failed(frame)
+            panel = Failed(frame, None, id = -1)
             frame.Show()
             app.MainLoop()
         
@@ -61,7 +96,7 @@ class MainWindow(wx.Panel):
         d={}
         for i in range(10):
             try: result=next(query)
-            except: pass
+            except: print()
             author=result.name
             interests=result.interests
             for item in interests:
@@ -101,6 +136,8 @@ class MainWindow(wx.Panel):
                             connections[person1].add(person2)
         
         fig, ax = plt.subplots()
+        ax.set_title(self.answer)
+
         G = nx.Graph()
         
         for person in connections:
@@ -149,25 +186,25 @@ class Author(wx.Frame):
             
             affiliation=profile.affiliation
             interests=profile.interests
-            pubList = self.listPubs(profile)
-            for i in range(len(pubList)):
-                if i == 0:
-                    self.quote2 = wx.StaticText(panel, label= pubList[i], 
-                    pos=(20, 90))
-                if i == 1:
-                    self.quote3 = wx.StaticText(panel, label= pubList[i], 
-                    pos=(20, 120))
-                if i == 2:
-                    self.quote4 = wx.StaticText(panel, label= pubList[i], 
-                    pos=(20, 150))
-                if i == 3:
-                    self.quote5 = wx.StaticText(panel, label= pubList[i], 
-                    pos=(20, 180))
-                if i == 4:
-                    self.quote6 = wx.StaticText(panel, label= pubList[i], 
-                    pos=(20, 210))
-            self.quote7 = wx.StaticText(panel, label= 'Publications', 
-                    pos=(20, 60))
+            # pubList = self.listPubs(profile)
+            # for i in range(len(pubList)):
+            #     if i == 0:
+            #         self.quote2 = wx.StaticText(panel, label= pubList[i], 
+            #         pos=(20, 90))
+            #     if i == 1:
+            #         self.quote3 = wx.StaticText(panel, label= pubList[i], 
+            #         pos=(20, 120))
+            #     if i == 2:
+            #         self.quote4 = wx.StaticText(panel, label= pubList[i], 
+            #         pos=(20, 150))
+            #     if i == 3:
+            #         self.quote5 = wx.StaticText(panel, label= pubList[i], 
+            #         pos=(20, 180))
+            #     if i == 4:
+            #         self.quote6 = wx.StaticText(panel, label= pubList[i], 
+            #         pos=(20, 210))
+            # self.quote7 = wx.StaticText(panel, label= 'Publications:', 
+            #         pos=(20, 60))
             for i in range(len(interests)):
                 if i == 0:
                     self.quote8 = wx.StaticText(panel, label= interests[i], 
@@ -184,13 +221,17 @@ class Author(wx.Frame):
                 if i == 4:
                     self.quote12 = wx.StaticText(panel, label= interests[i], 
                     pos=(20, 390))
-            self.quote13 = wx.StaticText(panel, label= 'Interests', 
-                    pos=(20, 240))
+            self.quote13 = wx.StaticText(panel, label= 'Interests:', 
+                    pos=(20, 120))
+            self.quote14 = wx.StaticText(panel, label= 'Affiliation:', 
+                    pos=(20, 60))
+            self.quote15 = wx.StaticText(panel, label= affiliation, 
+                    pos=(20, 90))
                 
 
     def getInfo(self, author):
         search_query = scholarly.search_author(author)
-        profile = next(search_query).fill()
+        profile = next(search_query)
         return profile
     def listPubs(self, profile):
         pubs=profile.publications
