@@ -142,7 +142,7 @@ class MainWindow(wx.Panel):
                             self.showAuthor(p)
                             return 42
         cid = fig.canvas.mpl_connect('button_press_event', onclick)
-        
+
         if pos != {}:
             plt.show()
             return 42
@@ -170,25 +170,25 @@ class Author(wx.Frame):
 
             for i in range(len(interests)):
                 if i == 0:
-                    self.quote8 = wx.StaticText(panel, label= interests[i],
+                    self.quote8 = wx.StaticText(panel, label= "\t"+interests[i],
                     pos=(20, 150))
                 if i == 1:
-                    self.quote9 = wx.StaticText(panel, label= interests[i],
+                    self.quote9 = wx.StaticText(panel, label= "\t"+interests[i],
                     pos=(20, 180))
                 if i == 2:
-                    self.quote10 = wx.StaticText(panel, label= interests[i],
+                    self.quote10 = wx.StaticText(panel, label= "\t"+interests[i],
                     pos=(20, 210))
                 if i == 3:
-                    self.quote11 = wx.StaticText(panel, label= interests[i],
+                    self.quote11 = wx.StaticText(panel, label= "\t"+interests[i],
                     pos=(20, 240))
                 if i == 4:
-                    self.quote12 = wx.StaticText(panel, label= interests[i],
+                    self.quote12 = wx.StaticText(panel, label= "\t"+interests[i],
                     pos=(20, 270))
             self.quote13 = wx.StaticText(panel, label= 'Interests:',
                     pos=(20, 120))
             self.quote14 = wx.StaticText(panel, label= 'Affiliation:',
                     pos=(20, 60))
-            self.quote15 = wx.StaticText(panel, label= affiliation,
+            self.quote15 = wx.StaticText(panel, label= "\t"+affiliation,
                     pos=(20, 90))
 
 
@@ -210,7 +210,7 @@ class Failed(wx.Frame):
             wx.Frame.__init__(self,parent,id,'Failed Search', size = (300,200))
             panel = wx.Panel(self)
 
-            self.quote = wx.StaticText(panel, 
+            self.quote = wx.StaticText(panel,
             label= 'No Connections for ' + keyword , pos=(20, 30))
             self.Show()
 
@@ -220,5 +220,3 @@ frame = wx.Frame(None)
 panel = MainWindow(frame)
 frame.Show()
 app.MainLoop()
-
-
