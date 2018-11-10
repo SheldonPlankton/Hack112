@@ -10,7 +10,7 @@ import networkx as nx
 import numpy
 import matplotlib.pyplot as plt
 import random
-
+import wikiDict
 
 class MainWindow(wx.Frame):
     def __init__(self,author,parent,id):
@@ -171,21 +171,27 @@ class Author(wx.Frame):
             interests=profile.interests
 
             for i in range(len(interests)):
+                text = "\t" + interests[i] + "\n"
+                try:
+                    text += wikiDict.wikiDict(interests[i])
+                    print(text)
+                except:
+                    text += "\t\t" + "Failed to get readable description!"
                 if i == 0:
-                    self.quote8 = wx.StaticText(panel, label= interests[i],
+                    self.quote8 = wx.StaticText(panel, label= text,
                     pos=(30, 150))
                 if i == 1:
-                    self.quote9 = wx.StaticText(panel, label= interests[i],
-                    pos=(30, 180))
-                if i == 2:
-                    self.quote10 = wx.StaticText(panel, label= interests[i],
+                    self.quote9 = wx.StaticText(panel, label= text,
                     pos=(30, 210))
-                if i == 3:
-                    self.quote11 = wx.StaticText(panel, label= interests[i],
-                    pos=(30, 240))
-                if i == 4:
-                    self.quote12 = wx.StaticText(panel, label= interests[i],
+                if i == 2:
+                    self.quote10 = wx.StaticText(panel, label= text,
                     pos=(30, 270))
+                if i == 3:
+                    self.quote11 = wx.StaticText(panel, label= text,
+                    pos=(30, 330))
+                if i == 4:
+                    self.quote12 = wx.StaticText(panel, label= text,
+                    pos=(30, 390))
             self.quote13 = wx.StaticText(panel, label= 'Interests:',
                     pos=(20, 120))
             self.quote14 = wx.StaticText(panel, label= 'Affiliation:',
