@@ -48,7 +48,13 @@ class MainWindow(wx.Panel):
     def searchBox(self, answer):
         self.search(answer)
         self.d = self.read(answer)
-        self.graph()
+        check = self.graph()
+        if check == None:
+            app = wx.App(False)
+            frame = wx.Frame(None)
+            panel = Failed(frame)
+            frame.Show()
+            app.MainLoop()
         
     def search(self, keyword):
         query= scholarly.search_keyword(keyword)
@@ -118,7 +124,7 @@ class MainWindow(wx.Panel):
                     if x-r <= event.xdata and x+r >= event.xdata and \
                         y-r <= event.ydata and y+r >= event.ydata:
                             self.showAuthor(p)
-                            return
+                            return 42
         cid = fig.canvas.mpl_connect('button_press_event', onclick)
         if connections != {}:
             plt.show()
@@ -139,8 +145,11 @@ class Author(wx.Frame):
             wx.Frame.__init__(self,parent,id,author, size = (300,200))
             panel = wx.Panel(self)
             self.quote = wx.StaticText(panel, label= author, pos=(20, 30))
-            pubs = self.getPubs(author)
-            pubList = self.listPubs(pubs[:5])
+            profile = self.getInfo(author)
+            
+            affiliation=profile.affiliation
+            interests=profile.interests
+            pubList = self.listPubs(profile)
             for i in range(len(pubList)):
                 if i == 0:
                     self.quote2 = wx.StaticText(panel, label= pubList[i], 
@@ -159,14 +168,32 @@ class Author(wx.Frame):
                     pos=(20, 210))
             self.quote7 = wx.StaticText(panel, label= 'Publications', 
                     pos=(20, 60))
+            for i in range(len(interests)):
+                if i == 0:
+                    self.quote8 = wx.StaticText(panel, label= interests[i], 
+                    pos=(20, 270))
+                if i == 1:
+                    self.quote9 = wx.StaticText(panel, label= interests[i], 
+                    pos=(20, 300))
+                if i == 2:
+                    self.quote10 = wx.StaticText(panel, label= interests[i], 
+                    pos=(20, 330))
+                if i == 3:
+                    self.quote11 = wx.StaticText(panel, label= interests[i], 
+                    pos=(20, 360))
+                if i == 4:
+                    self.quote12 = wx.StaticText(panel, label= interests[i], 
+                    pos=(20, 390))
+            self.quote13 = wx.StaticText(panel, label= 'Interests', 
+                    pos=(20, 240))
+                
 
-
-    def getPubs(self, author):
+    def getInfo(self, author):
         search_query = scholarly.search_author(author)
         profile = next(search_query).fill()
-        return profile.publications
-    
-    def listPubs(self, pubs):
+        return profile
+    def listPubs(self, profile):
+        pubs=profile.publications
         return ([pub.bib['title'] for pub in pubs])
     
     def pubURL(self, pubs,i):
