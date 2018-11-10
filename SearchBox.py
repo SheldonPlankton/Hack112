@@ -83,10 +83,10 @@ class MainWindow(wx.Panel):
     def searchBox(self, answer):
         self.search(answer)
         self.d = self.read(answer)
-        check = self.graph()
+        check = self.graph(answer)
         if check == None:
             app = wx.App()
-            fame=Failed(parent=None,id=-1)
+            fame=Failed(answer,parent=None,id=-1)
             fame.Show()
             app.MainLoop()
 
@@ -122,7 +122,7 @@ class MainWindow(wx.Panel):
             e = json.load(json_file)
         return e
 
-    def graph(self):
+    def graph(self, keyword):
         d = self.d
         connections = {}
         for interest in d:
@@ -138,7 +138,7 @@ class MainWindow(wx.Panel):
                             connections[person1].add(person2)
 
         fig, ax = plt.subplots()
-
+        plt.title(keyword)
         G = nx.Graph()
 
         for person in connections:
@@ -146,7 +146,7 @@ class MainWindow(wx.Panel):
             for p in network:
                 G.add_edge(person, p)
 
-        pos = nx.spring_layout(G)
+        pos = nx.shell_layout(G)
 
         nx.draw(G, pos, font_size=16, with_labels=False)
         for p in pos:  # raise text positions
@@ -164,8 +164,10 @@ class MainWindow(wx.Panel):
                             self.showAuthor(p)
                             return 42
         cid = fig.canvas.mpl_connect('button_press_event', onclick)
+        
         if pos != {}:
             plt.show()
+            return 42
         else:
             return None
 
@@ -226,11 +228,12 @@ class Author(wx.Frame):
 
 
 class Failed(wx.Frame):
-    def __init__(self,parent,id):
+    def __init__(self,parent,id, keyword):
             wx.Frame.__init__(self,parent,id,'Failed Search', size = (300,200))
             panel = wx.Panel(self)
 
-            self.quote = wx.StaticText(panel, label= 'No Connections', pos=(20, 30))
+            self.quote = wx.StaticText(panel, 
+            label= 'No Connections for ' + keyword , pos=(20, 30))
             self.Show()
 
 
@@ -239,3 +242,5 @@ frame = wx.Frame(None)
 panel = MainWindow(frame)
 frame.Show()
 app.MainLoop()
+
+
