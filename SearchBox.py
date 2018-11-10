@@ -16,7 +16,7 @@ class MainWindow(wx.Frame):
     def __init__(self,author,parent,id):
         wx.Frame.__init__(self,parent,id,'Search Research', size = (500,500))
         panel = wx.Panel(self)
-        self.quote = wx.StaticText(self, label="Search Research", pos=(20, 30))
+        self.quote = wx.StaticText(self, label="Search Different Research Topics or Researchers", pos=(20, 30))
         self.SetBackgroundColour('light blue')
         self.type = 0
         self.answer = ''
@@ -29,10 +29,18 @@ class MainWindow(wx.Frame):
         self.button =wx.Button(self, label="Run Search", pos=(150, 200))
         self.Bind(wx.EVT_BUTTON, self.OnClick,self.button)
 
-        self.button =wx.Button(self, label="Random Search", pos=(150, 250))
-        self.Bind(wx.EVT_BUTTON, self.RandomClick,self.button)
+        self.button1 =wx.Button(self, label="Random Search", pos=(150, 250))
+        self.Bind(wx.EVT_BUTTON, self.RandomClick,self.button1)
 
-
+        self.quote.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                             False, 'TNR'))
+        self.lblname.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                          False, 'TNR'))
+        self.editname.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                 False, 'TNR'))
+        self.button.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                              False, 'TNR'))
+        self.button1.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'TNR'))
 
         # Radio Boxes
         radioList = ['Subjects', 'Authors']
@@ -40,6 +48,9 @@ class MainWindow(wx.Frame):
         choices=radioList,  majorDimension=3,
                          style=wx.RA_SPECIFY_COLS)
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
+
+        rb.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                             False, 'TNR'))
     def EvtRadioBox(self, event):
         self.type = event.GetInt()
     def OnClick(self,event):
@@ -160,12 +171,12 @@ class MainWindow(wx.Frame):
 
 class Author(wx.Frame):
     def __init__(self,author,parent,id):
-            wx.Frame.__init__(self,parent,id,author.title(), size = (500,500))
-            panel = wx.Panel(self)
             profile = self.getInfo(author)
+            wx.Frame.__init__(self,parent,id,profile.name, size = (500,500))
+            panel = wx.Panel(self)
             self.quote = wx.StaticText(panel, label= profile.name,
             pos=(20, 30))
-            self.SetBackgroundColour((51, 255, 210))
+            self.SetBackgroundColour('light blue')
 
             affiliation=profile.affiliation
             interests=profile.interests
@@ -181,22 +192,40 @@ class Author(wx.Frame):
                     pos=(30, 150))
                 if i == 1:
                     self.quote9 = wx.StaticText(panel, label= text,
-                    pos=(30, 210))
+                    pos=(30, 230))
                 if i == 2:
                     self.quote10 = wx.StaticText(panel, label= text,
-                    pos=(30, 270))
+                    pos=(30, 310))
                 if i == 3:
                     self.quote11 = wx.StaticText(panel, label= text,
-                    pos=(30, 330))
+                    pos=(30, 390))
                 if i == 4:
                     self.quote12 = wx.StaticText(panel, label= text,
-                    pos=(30, 390))
+                    pos=(30, 470))
             self.quote13 = wx.StaticText(panel, label= 'Interests:',
                     pos=(20, 120))
             self.quote14 = wx.StaticText(panel, label= 'Affiliation:',
                     pos=(20, 60))
             self.quote15 = wx.StaticText(panel, label= affiliation,
                     pos=(30, 90))
+            self.quote.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
+                                         False, 'TNR'))
+            self.quote13.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD,
+                                         False, 'Arial'))
+            self.quote14.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD,
+                                         False, 'TNR'))
+            self.quote15.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                         False, 'TNR'))
+            self.quote8.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                         False, 'TNR'))
+            self.quote9.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                         False, 'TNR'))
+            self.quote10.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                         False, 'TNR'))
+            self.quote11.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                         False, 'TNR'))
+            self.quote12.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                         False, 'TNR'))
 
 
     def getInfo(self, author):
