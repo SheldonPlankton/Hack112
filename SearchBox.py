@@ -38,7 +38,7 @@ class MainWindow(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.quote = wx.StaticText(self, label="Search Research", pos=(20, 30))
-        
+
         self.type = 0
         self.answer = ''
         # the edit control - one line version.
@@ -46,18 +46,18 @@ class MainWindow(wx.Panel):
         self.editname = wx.TextCtrl(self, value="", pos=(150, 60), size=(140,-1))
         self.Bind(wx.EVT_TEXT, self.EvtText, self.editname)
         # A button
-        
+
         self.button =wx.Button(self, label="Run Search", pos=(150, 200))
         self.Bind(wx.EVT_BUTTON, self.OnClick,self.button)
-        
+
         self.button =wx.Button(self, label="Random Search", pos=(150, 250))
         self.Bind(wx.EVT_BUTTON, self.RandomClick,self.button)
 
-        
+
 
         # Radio Boxes
         radioList = ['Subjects', 'Authors']
-        rb = wx.RadioBox(self, label="Select Search Category?", pos=(20, 110), 
+        rb = wx.RadioBox(self, label="Select Search Category?", pos=(20, 110),
         choices=radioList,  majorDimension=3,
                          style=wx.RA_SPECIFY_COLS)
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
@@ -69,17 +69,17 @@ class MainWindow(wx.Panel):
             self.searchBox(self.answer)
         else:
             self.showAuthor(self.answer)
-            
+
     def RandomClick(self,event):
         with open ('disciplines.txt', 'r') as json_file:
             itemlist = json.load(json_file)
         answer = random.choice(itemlist)
         self.searchBox(answer)
 
-            
+
     def EvtText(self, event):
         self.answer = event.GetString()
-        
+
     def searchBox(self, answer):
         self.search(answer)
         self.d = self.read(answer)
@@ -89,8 +89,9 @@ class MainWindow(wx.Panel):
             fame=Failed(parent=None,id=-1)
             fame.Show()
             app.MainLoop()
-        
+
     def search(self, keyword):
+        keyword.lower()
         query= scholarly.search_keyword(keyword)
         d={}
         for i in range(10):
@@ -110,16 +111,17 @@ class MainWindow(wx.Panel):
                         d[formItem]={author:1}
             except: print()
 
-            fileName=keyword+'.txt'
-            with open(fileName, 'w') as outfile:  
+            fileName='SearchData/'+keyword+'.txt'
+            with open(fileName, 'w') as outfile:
                 json.dump(d, outfile)
-    
-                
+
+
     def read(self, keyword):
-        with open(keyword+'.txt', 'rb') as json_file:  
+        keyword.lower()
+        with open('SearchData/'+keyword+'.txt', 'rb') as json_file:
             e = json.load(json_file)
         return e
-    
+
     def graph(self):
         d = self.d
         connections = {}
@@ -134,23 +136,23 @@ class MainWindow(wx.Panel):
                             connections[person1] = {person2,}
                         else:
                             connections[person1].add(person2)
-        
+
         fig, ax = plt.subplots()
 
         G = nx.Graph()
-        
+
         for person in connections:
             network = connections[person]
             for p in network:
                 G.add_edge(person, p)
-        
+
         pos = nx.spring_layout(G)
-        
+
         nx.draw(G, pos, font_size=16, with_labels=False)
         for p in pos:  # raise text positions
             pos[p][1] += 0.07
         nx.draw_networkx_labels(G, pos)
-        
+
         def onclick(event):
             if event.xdata != None and event.ydata != None:
                 for p in pos:
@@ -166,7 +168,7 @@ class MainWindow(wx.Panel):
             plt.show()
         else:
             return None
-        
+
     def showAuthor(self, author):
         plt.close()
         app = wx.App()
@@ -182,33 +184,33 @@ class Author(wx.Frame):
             panel = wx.Panel(self)
             self.quote = wx.StaticText(panel, label= author, pos=(20, 30))
             profile = self.getInfo(author)
-            
+
             affiliation=profile.affiliation
             interests=profile.interests
-            
+
             for i in range(len(interests)):
                 if i == 0:
-                    self.quote8 = wx.StaticText(panel, label= interests[i], 
+                    self.quote8 = wx.StaticText(panel, label= interests[i],
                     pos=(20, 150))
                 if i == 1:
-                    self.quote9 = wx.StaticText(panel, label= interests[i], 
+                    self.quote9 = wx.StaticText(panel, label= interests[i],
                     pos=(20, 180))
                 if i == 2:
-                    self.quote10 = wx.StaticText(panel, label= interests[i], 
+                    self.quote10 = wx.StaticText(panel, label= interests[i],
                     pos=(20, 210))
                 if i == 3:
-                    self.quote11 = wx.StaticText(panel, label= interests[i], 
+                    self.quote11 = wx.StaticText(panel, label= interests[i],
                     pos=(20, 240))
                 if i == 4:
-                    self.quote12 = wx.StaticText(panel, label= interests[i], 
+                    self.quote12 = wx.StaticText(panel, label= interests[i],
                     pos=(20, 270))
-            self.quote13 = wx.StaticText(panel, label= 'Interests:', 
+            self.quote13 = wx.StaticText(panel, label= 'Interests:',
                     pos=(20, 120))
-            self.quote14 = wx.StaticText(panel, label= 'Affiliation:', 
+            self.quote14 = wx.StaticText(panel, label= 'Affiliation:',
                     pos=(20, 60))
-            self.quote15 = wx.StaticText(panel, label= affiliation, 
+            self.quote15 = wx.StaticText(panel, label= affiliation,
                     pos=(20, 90))
-                
+
 
     def getInfo(self, author):
         search_query = scholarly.search_author(author)
@@ -217,7 +219,7 @@ class Author(wx.Frame):
     def listPubs(self, profile):
         pubs=profile.publications
         return ([pub.bib['title'] for pub in pubs])
-    
+
     def pubURL(self, pubs,i):
         pub=pubs[i].fill()
         return pub.bib['url']
@@ -227,16 +229,13 @@ class Failed(wx.Frame):
     def __init__(self,parent,id):
             wx.Frame.__init__(self,parent,id,'Failed Search', size = (300,200))
             panel = wx.Panel(self)
-    
+
             self.quote = wx.StaticText(panel, label= 'No Connections', pos=(20, 30))
             self.Show()
-    
-    
+
+
 app = wx.App(False)
 frame = wx.Frame(None)
 panel = MainWindow(frame)
 frame.Show()
 app.MainLoop()
-
-
-

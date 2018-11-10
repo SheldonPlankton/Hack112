@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import scholarly
+import imShow
 
 def getInfo(author):
     search_query = scholarly.search_author(author)
@@ -14,6 +15,7 @@ def listPubs(profile):
 
 profile=getInfo('Liz Holm, CMU')
 lst=listPubs(profile)
+print(profile)
 shortList=lst[:8]
 affiliation=profile.affiliation
 interests=profile.interests
@@ -27,9 +29,4 @@ def pubURL(profile,i):
 print(shortList) #display in gui
 
 #if click on item in lst, use index of item (0-8)
-print(pubURL(profile,0))     #to follow this link  
-
-
-
-
-
+print(pubURL(profile,0))     #to follow this link
