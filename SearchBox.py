@@ -12,11 +12,12 @@ import matplotlib.pyplot as plt
 import random
 
 
-class MainWindow(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+class MainWindow(wx.Frame):
+    def __init__(self,author,parent,id):
+        wx.Frame.__init__(self,parent,id,'Search Research', size = (500,500))
+        panel = wx.Panel(self)
         self.quote = wx.StaticText(self, label="Search Research", pos=(20, 30))
-
+        self.SetBackgroundColour('light blue')
         self.type = 0
         self.answer = ''
         # the edit control - one line version.
@@ -39,7 +40,6 @@ class MainWindow(wx.Panel):
         choices=radioList,  majorDimension=3,
                          style=wx.RA_SPECIFY_COLS)
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
-
     def EvtRadioBox(self, event):
         self.type = event.GetInt()
     def OnClick(self,event):
@@ -72,7 +72,7 @@ class MainWindow(wx.Panel):
         keyword.lower()
         query= scholarly.search_keyword(keyword)
         d={}
-        for i in range(10):
+        for i in range(20):
             try:
                 result=next(query)
                 author=result.name
@@ -122,8 +122,7 @@ class MainWindow(wx.Panel):
         for person in connections:
             network = connections[person]
             for p in network:
-                G.add_edge(person, p)
-
+                G.add_edge(person, p, color = 'b')
         pos = nx.shell_layout(G)
 
         nx.draw(G, pos, font_size=16, with_labels=False)
@@ -147,6 +146,7 @@ class MainWindow(wx.Panel):
             plt.show()
             return 42
         else:
+            plt.close()
             return None
 
     def showAuthor(self, author):
@@ -160,36 +160,38 @@ class MainWindow(wx.Panel):
 
 class Author(wx.Frame):
     def __init__(self,author,parent,id):
-            wx.Frame.__init__(self,parent,id,author, size = (500,500))
+            wx.Frame.__init__(self,parent,id,author.title(), size = (500,500))
             panel = wx.Panel(self)
-            self.quote = wx.StaticText(panel, label= author, pos=(20, 30))
+            self.quote = wx.StaticText(panel, label= author.title(),
+            pos=(20, 30))
             profile = self.getInfo(author)
+            self.SetBackgroundColour((51, 255, 210))
 
             affiliation=profile.affiliation
             interests=profile.interests
 
             for i in range(len(interests)):
                 if i == 0:
-                    self.quote8 = wx.StaticText(panel, label= "\t"+interests[i],
-                    pos=(20, 150))
+                    self.quote8 = wx.StaticText(panel, label= interests[i],
+                    pos=(30, 150))
                 if i == 1:
-                    self.quote9 = wx.StaticText(panel, label= "\t"+interests[i],
-                    pos=(20, 180))
+                    self.quote9 = wx.StaticText(panel, label= interests[i],
+                    pos=(30, 180))
                 if i == 2:
-                    self.quote10 = wx.StaticText(panel, label= "\t"+interests[i],
-                    pos=(20, 210))
+                    self.quote10 = wx.StaticText(panel, label= interests[i],
+                    pos=(30, 210))
                 if i == 3:
-                    self.quote11 = wx.StaticText(panel, label= "\t"+interests[i],
-                    pos=(20, 240))
+                    self.quote11 = wx.StaticText(panel, label= interests[i],
+                    pos=(30, 240))
                 if i == 4:
-                    self.quote12 = wx.StaticText(panel, label= "\t"+interests[i],
-                    pos=(20, 270))
+                    self.quote12 = wx.StaticText(panel, label= interests[i],
+                    pos=(30, 270))
             self.quote13 = wx.StaticText(panel, label= 'Interests:',
                     pos=(20, 120))
             self.quote14 = wx.StaticText(panel, label= 'Affiliation:',
                     pos=(20, 60))
-            self.quote15 = wx.StaticText(panel, label= "\t"+affiliation,
-                    pos=(20, 90))
+            self.quote15 = wx.StaticText(panel, label= affiliation,
+                    pos=(30, 90))
 
 
     def getInfo(self, author):
@@ -217,6 +219,6 @@ class Failed(wx.Frame):
 
 app = wx.App(False)
 frame = wx.Frame(None)
-panel = MainWindow(frame)
+frame=MainWindow('', parent=None,id=-1)
 frame.Show()
 app.MainLoop()
