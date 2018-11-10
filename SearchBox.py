@@ -12,28 +12,6 @@ import matplotlib.pyplot as plt
 import random
 
 
-def getDisciplines():
-    url='http://enacademic.com/dic.nsf/enwiki/152269'
-    website = requests.get(url)
-    source=website.text
-    parser = BeautifulSoup(source,'html.parser')
-    l=[]
-    for header in parser.find_all("h3"):
-        next=header.next_sibling.next_sibling.next_sibling.next_sibling
-        if next!=None:
-            if next.name=='table':
-                for item in next.find_all("li"):
-                    string=item.string
-                    if string!=None:
-                        l.append(string)
-    return l
-
-lst=getDisciplines()
-with open('disciplines.txt', 'w') as outfile:
-    json.dump(lst, outfile)
-
-getDisciplines()
-
 class MainWindow(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -101,7 +79,7 @@ class MainWindow(wx.Panel):
                 interests=result.interests
                 for item in interests:
                     formItem=item.title()
-                    if formItem==keyword or formItem==keyword.lower():
+                    if formItem.lower()==keyword.lower():
                         continue
                     elif formItem in d:
                         if author in formItem:
@@ -182,7 +160,7 @@ class MainWindow(wx.Panel):
 
 class Author(wx.Frame):
     def __init__(self,author,parent,id):
-            wx.Frame.__init__(self,parent,id,author, size = (300,200))
+            wx.Frame.__init__(self,parent,id,author, size = (500,500))
             panel = wx.Panel(self)
             self.quote = wx.StaticText(panel, label= author, pos=(20, 30))
             profile = self.getInfo(author)
@@ -228,7 +206,7 @@ class Author(wx.Frame):
 
 
 class Failed(wx.Frame):
-    def __init__(self,parent,id, keyword):
+    def __init__(self,keyword,parent,id):
             wx.Frame.__init__(self,parent,id,'Failed Search', size = (300,200))
             panel = wx.Panel(self)
 
