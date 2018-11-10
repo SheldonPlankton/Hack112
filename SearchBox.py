@@ -19,7 +19,7 @@ class MainWindow(wx.Panel):
         self.answer = ''
         # the edit control - one line version.
         self.lblname = wx.StaticText(self, label="Search Term :", pos=(20,60))
-        self.editname = wx.TextCtrl(self, value="Enter Search Term", pos=(150, 60), size=(140,-1))
+        self.editname = wx.TextCtrl(self, value="", pos=(150, 60), size=(140,-1))
         self.Bind(wx.EVT_TEXT, self.EvtText, self.editname)
         # A button
         
@@ -48,12 +48,7 @@ class MainWindow(wx.Panel):
     def searchBox(self, answer):
         self.search(answer)
         self.d = self.read(answer)
-        check = self.graph()
-        if check == None:
-            app = wx.App()
-            fame=Failed(parent=None,id=-1)
-            fame.Show()
-            app.MainLoop()
+        self.graph()
         
     def search(self, keyword):
         query= scholarly.search_keyword(keyword)
@@ -123,7 +118,7 @@ class MainWindow(wx.Panel):
                     if x-r <= event.xdata and x+r >= event.xdata and \
                         y-r <= event.ydata and y+r >= event.ydata:
                             self.showAuthor(p)
-        
+                            return
         cid = fig.canvas.mpl_connect('button_press_event', onclick)
         if connections != {}:
             plt.show()
@@ -146,10 +141,24 @@ class Author(wx.Frame):
             self.quote = wx.StaticText(panel, label= author, pos=(20, 30))
             pubs = self.getPubs(author)
             pubList = self.listPubs(pubs[:5])
-            spacing= 20
             for i in range(len(pubList)):
-                
-                self.quote2 = wx.StaticText(panel, label= pubList[i], pos=(60+spacing*i, 30))
+                if i == 0:
+                    self.quote2 = wx.StaticText(panel, label= pubList[i], 
+                    pos=(20, 90))
+                if i == 1:
+                    self.quote3 = wx.StaticText(panel, label= pubList[i], 
+                    pos=(20, 120))
+                if i == 2:
+                    self.quote4 = wx.StaticText(panel, label= pubList[i], 
+                    pos=(20, 150))
+                if i == 3:
+                    self.quote5 = wx.StaticText(panel, label= pubList[i], 
+                    pos=(20, 180))
+                if i == 4:
+                    self.quote6 = wx.StaticText(panel, label= pubList[i], 
+                    pos=(20, 210))
+            self.quote7 = wx.StaticText(panel, label= 'Publications', 
+                    pos=(20, 60))
 
 
     def getPubs(self, author):
