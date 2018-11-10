@@ -74,7 +74,7 @@ class MainWindow(wx.Panel):
         with open ('disciplines.txt', 'r') as json_file:
             itemlist = json.load(json_file)
         answer = random.choice(itemlist)
-        self.searchBox(answer)
+        self.searchBox(answer.lower())
 
 
     def EvtText(self, event):
