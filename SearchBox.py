@@ -190,18 +190,28 @@ class Author(wx.Frame):
                 if i == 0:
                     self.quote8 = wx.StaticText(panel, label= text,
                     pos=(30, 150))
+                    self.quote8.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                 False, 'TNR'))
                 if i == 1:
                     self.quote9 = wx.StaticText(panel, label= text,
                     pos=(30, 230))
+                    self.quote9.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                 False, 'TNR'))
                 if i == 2:
                     self.quote10 = wx.StaticText(panel, label= text,
                     pos=(30, 310))
+                    self.quote10.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                 False, 'TNR'))
                 if i == 3:
                     self.quote11 = wx.StaticText(panel, label= text,
                     pos=(30, 390))
+                    self.quote11.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                 False, 'TNR'))
                 if i == 4:
                     self.quote12 = wx.StaticText(panel, label= text,
                     pos=(30, 470))
+                    self.quote12.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
+                                                 False, 'TNR'))
             self.quote13 = wx.StaticText(panel, label= 'Interests:',
                     pos=(20, 120))
             self.quote14 = wx.StaticText(panel, label= 'Affiliation:',
@@ -216,16 +226,11 @@ class Author(wx.Frame):
                                          False, 'TNR'))
             self.quote15.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
                                          False, 'TNR'))
-            self.quote8.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
-                                         False, 'TNR'))
-            self.quote9.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
-                                         False, 'TNR'))
-            self.quote10.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
-                                         False, 'TNR'))
-            self.quote11.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
-                                         False, 'TNR'))
-            self.quote12.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL,
-                                         False, 'TNR'))
+
+
+
+
+
 
 
     def getInfo(self, author):
