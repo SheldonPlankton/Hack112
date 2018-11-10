@@ -85,31 +85,31 @@ class MainWindow(wx.Panel):
         self.d = self.read(answer)
         check = self.graph()
         if check == None:
-            app = wx.App(False)
-            frame = wx.Frame(None)
-            panel = Failed(frame, None, id = -1)
-            frame.Show()
+            app = wx.App()
+            fame=Failed(parent=None,id=-1)
+            fame.Show()
             app.MainLoop()
         
     def search(self, keyword):
         query= scholarly.search_keyword(keyword)
         d={}
         for i in range(10):
-            try: result=next(query)
+            try:
+                result=next(query)
+                author=result.name
+                interests=result.interests
+                for item in interests:
+                    formItem=item.title()
+                    if formItem==keyword or formItem==keyword.lower():
+                        continue
+                    elif formItem in d:
+                        if author in formItem:
+                            d[formItem][author]+=1
+                        else: d[formItem][author]=1
+                    else:
+                        d[formItem]={author:1}
             except: print()
-            author=result.name
-            interests=result.interests
-            for item in interests:
-                formItem=item.title()
-                if formItem==keyword or formItem==keyword.lower():
-                    continue
-                elif formItem in d:
-                    if author in formItem:
-                        d[formItem][author]+=1
-                    else: d[formItem][author]=1
-                else:
-                    d[formItem]={author:1}
-    
+
             fileName=keyword+'.txt'
             with open(fileName, 'w') as outfile:  
                 json.dump(d, outfile)
@@ -136,7 +136,6 @@ class MainWindow(wx.Panel):
                             connections[person1].add(person2)
         
         fig, ax = plt.subplots()
-        ax.set_title(self.answer)
 
         G = nx.Graph()
         
@@ -145,7 +144,7 @@ class MainWindow(wx.Panel):
             for p in network:
                 G.add_edge(person, p)
         
-        pos = nx.shell_layout(G)
+        pos = nx.spring_layout(G)
         
         nx.draw(G, pos, font_size=16, with_labels=False)
         for p in pos:  # raise text positions
@@ -163,7 +162,7 @@ class MainWindow(wx.Panel):
                             self.showAuthor(p)
                             return 42
         cid = fig.canvas.mpl_connect('button_press_event', onclick)
-        if connections != {}:
+        if pos != {}:
             plt.show()
         else:
             return None
@@ -186,41 +185,23 @@ class Author(wx.Frame):
             
             affiliation=profile.affiliation
             interests=profile.interests
-            # pubList = self.listPubs(profile)
-            # for i in range(len(pubList)):
-            #     if i == 0:
-            #         self.quote2 = wx.StaticText(panel, label= pubList[i], 
-            #         pos=(20, 90))
-            #     if i == 1:
-            #         self.quote3 = wx.StaticText(panel, label= pubList[i], 
-            #         pos=(20, 120))
-            #     if i == 2:
-            #         self.quote4 = wx.StaticText(panel, label= pubList[i], 
-            #         pos=(20, 150))
-            #     if i == 3:
-            #         self.quote5 = wx.StaticText(panel, label= pubList[i], 
-            #         pos=(20, 180))
-            #     if i == 4:
-            #         self.quote6 = wx.StaticText(panel, label= pubList[i], 
-            #         pos=(20, 210))
-            # self.quote7 = wx.StaticText(panel, label= 'Publications:', 
-            #         pos=(20, 60))
+            
             for i in range(len(interests)):
                 if i == 0:
                     self.quote8 = wx.StaticText(panel, label= interests[i], 
-                    pos=(20, 270))
+                    pos=(20, 150))
                 if i == 1:
                     self.quote9 = wx.StaticText(panel, label= interests[i], 
-                    pos=(20, 300))
+                    pos=(20, 180))
                 if i == 2:
                     self.quote10 = wx.StaticText(panel, label= interests[i], 
-                    pos=(20, 330))
+                    pos=(20, 210))
                 if i == 3:
                     self.quote11 = wx.StaticText(panel, label= interests[i], 
-                    pos=(20, 360))
+                    pos=(20, 240))
                 if i == 4:
                     self.quote12 = wx.StaticText(panel, label= interests[i], 
-                    pos=(20, 390))
+                    pos=(20, 270))
             self.quote13 = wx.StaticText(panel, label= 'Interests:', 
                     pos=(20, 120))
             self.quote14 = wx.StaticText(panel, label= 'Affiliation:', 
