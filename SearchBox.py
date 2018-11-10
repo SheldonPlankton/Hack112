@@ -116,7 +116,7 @@ class MainWindow(wx.Frame):
                             connections[person1].add(person2)
 
         fig, ax = plt.subplots()
-        plt.title(keyword)
+        plt.title(keyword[0].upper()+keyword[1:].lower())
         G = nx.Graph()
 
         for person in connections:
