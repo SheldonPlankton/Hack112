@@ -14,7 +14,7 @@ import wikiDict
 
 class MainWindow(wx.Frame):
     def __init__(self,author,parent,id):
-        wx.Frame.__init__(self,parent,id,'Search Research', size = (500,500))
+        wx.Frame.__init__(self,parent,id,'Search Research', size = (400,350))
         panel = wx.Panel(self)
         self.quote = wx.StaticText(self, label="Search Different Research Topics or Researchers", pos=(20, 30))
         self.SetBackgroundColour('light blue')
