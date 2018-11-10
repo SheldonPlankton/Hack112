@@ -162,9 +162,9 @@ class Author(wx.Frame):
     def __init__(self,author,parent,id):
             wx.Frame.__init__(self,parent,id,author.title(), size = (500,500))
             panel = wx.Panel(self)
-            self.quote = wx.StaticText(panel, label= author.title(),
-            pos=(20, 30))
             profile = self.getInfo(author)
+            self.quote = wx.StaticText(panel, label= profile.name,
+            pos=(20, 30))
             self.SetBackgroundColour((51, 255, 210))
 
             affiliation=profile.affiliation
@@ -174,7 +174,6 @@ class Author(wx.Frame):
                 text = "\t" + interests[i] + "\n"
                 try:
                     text += wikiDict.wikiDict(interests[i])
-                    print(text)
                 except:
                     text += "\t\t" + "Failed to get readable description!"
                 if i == 0:
